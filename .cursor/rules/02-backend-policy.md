@@ -68,9 +68,9 @@ Estas reglas aplican a:
 
 ## Referencias
 
-* `.cursor/rules/03-api-contract.md`
-* `.cursor/rules/04-security-sessions-tokens.md`
-* `.cursor/rules/14-obtencion-datos-performance.md`
+* `.cursor/rules/multi/03-api-contract.md` ó `.cursor/rules/mono/03-api-contract.md`
+* `.cursor/rules/multi/04-security-sessions-tokens.md` ó `.cursor/rules/mono/04-security-sessions-tokens.md`
+* `.cursor/rules/multi/14-obtencion-datos-performance.md` ó `.cursor/rules/mono/14-obtencion-datos-performance.md`
 * `docs/01-arquitectura/01-arquitectura-proyecto.md`
 * `docs/backend/PLAYBOOK_BACKEND_LARAVEL.md`
 * `docs/domain/DATA_MODEL.md`

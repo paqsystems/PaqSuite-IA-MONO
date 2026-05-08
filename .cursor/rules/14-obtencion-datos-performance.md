@@ -169,6 +169,6 @@ No existe:
 
 ## Referencias
 
-* `.cursor/rules/02-backend-policy.md`
-* `.cursor/rules/03-api-contract.md`
-* `.cursor/rules/08-devextreme-grid-standards.md`
+* `.cursor/rules/multi/02-backend-policy.md` ó `.cursor/rules/mono/02-backend-policy.md`
+* `.cursor/rules/multi/03-api-contract.md` ó `.cursor/rules/mono/03-api-contract.md`
+* `.cursor/rules/multi/08-devextreme-grid-standards.md` ó `.cursor/rules/mono/08-devextreme-grid-standards.md`

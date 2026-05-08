@@ -101,7 +101,7 @@ Si la TR modifica:
 documentar alineación con:
 
 ```text
-.cursor/rules/14-obtencion-datos-performance.md
+.cursor/rules/multi/14-obtencion-datos-performance.md ó .cursor/rules/mono/14-obtencion-datos-performance.md
 ```
 
 y registrar:

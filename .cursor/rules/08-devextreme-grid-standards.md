@@ -241,6 +241,6 @@ grid.pedidos.master
 
 ## 6) Referencias
 
-* `.cursor/rules/09-tareas-grillas-habilitar-layouts-hu001.md`
+* `.cursor/rules/multi/09-tareas-grillas-habilitar-layouts-hu001.md` ó `.cursor/rules/mono/09-tareas-grillas-habilitar-layouts-hu001.md`
 * `docs/frontend/ui-layer-wrappers.md`
 * `docs/frontend/devextreme-norms.md`

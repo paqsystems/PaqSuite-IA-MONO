@@ -153,6 +153,6 @@ Usar LEFT JOIN + NULL verification.
 
 ## Referencias
 
-* `.cursor/rules/02-backend-policy.md`
+* `.cursor/rules/multi/02-backend-policy.md` ó `.cursor/rules/mono/02-backend-policy.md`
 * `docs/backend/PLAYBOOK_BACKEND_LARAVEL.md`
 * `docs/domain/DATA_MODEL.md`

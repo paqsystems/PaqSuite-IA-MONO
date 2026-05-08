@@ -160,5 +160,5 @@ Antes de push/PR:
 
 ## Referencias
 
-* `.cursor/rules/05-data-access-orm-sql.md`
+* `.cursor/rules/multi/05-data-access-orm-sql.md` ó `.cursor/rules/mono/05-data-access-orm-sql.md`
 * `docs/06-operacion/deploy-infraestructura.md`

@@ -92,8 +92,8 @@ Aplicar en:
 
 Esta regla complementa:
 
-```text id="wlnm0y"
-.cursor/rules/08-devextreme-grid-standards.md
+```text
+.cursor/rules/multi/08-devextreme-grid-standards.md ó .cursor/rules/mono/08-devextreme-grid-standards.md
 ```
 
 No reemplaza el estándar general de grillas.
@@ -102,5 +102,5 @@ No reemplaza el estándar general de grillas.
 
 ## Referencias
 
-* `.cursor/rules/08-devextreme-grid-standards.md`
+* `.cursor/rules/multi/08-devextreme-grid-standards.md` ó `.cursor/rules/mono/08-devextreme-grid-standards.md`
 * `docs/03-historias-usuario/000-Generalidades/HU-001-layouts-grilla.md`

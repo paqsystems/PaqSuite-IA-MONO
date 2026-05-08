@@ -155,5 +155,5 @@ parametrosGral.editor.{clave}
 
 ## Referencias
 
-* `.cursor/rules/11-parametros-generales-por-modulo.md`
-* `.cursor/rules/12-plan-tareas-hu-parametros-generales.md`
+* `.cursor/rules/multi/11-parametros-generales-por-modulo.md` ó `.cursor/rules/mono/11-parametros-generales-por-modulo.md`
+* `.cursor/rules/multi/12-plan-tareas-hu-parametros-generales.md` ó `.cursor/rules/mono/12-plan-tareas-hu-parametros-generales.md`

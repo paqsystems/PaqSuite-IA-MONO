@@ -125,6 +125,6 @@ PROGRAMA: Ventas
 
 ## Referencias
 
-* `.cursor/rules/13-parametros-generales-ui-listado-y-edicion-por-tipo.md`
-* `.cursor/rules/10-dashboard-indicadores-por-modulo.md`
+* `.cursor/rules/multi/13-parametros-generales-ui-listado-y-edicion-por-tipo.md` ó `.cursor/rules/mono/13-parametros-generales-ui-listado-y-edicion-por-tipo.md`
+* `.cursor/rules/multi/10-dashboard-indicadores-por-modulo.md` ó `.cursor/rules/mono/10-dashboard-indicadores-por-modulo.md`
 * `docs/03-historias-usuario/000-Generalidades/HU-007-Parametros-generales.md`

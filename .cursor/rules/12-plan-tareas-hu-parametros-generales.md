@@ -177,5 +177,5 @@ No existe:
 
 ## Referencias
 
-* `.cursor/rules/13-parametros-generales-ui-listado-y-edicion-por-tipo.md`
+* `.cursor/rules/multi/13-parametros-generales-ui-listado-y-edicion-por-tipo.md` ó `.cursor/rules/mono/13-parametros-generales-ui-listado-y-edicion-por-tipo.md`
 * `docs/03-historias-usuario/000-Generalidades/HU-007-Parametros-generales.md`
