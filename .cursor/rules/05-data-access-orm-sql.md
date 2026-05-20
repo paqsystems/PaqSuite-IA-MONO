@@ -153,6 +153,7 @@ Usar LEFT JOIN + NULL verification.
 
 ## Referencias
 
+* Convención de **nombre de base según host (subdominio)** y branding por cliente: `.cursor/rules/15-host-subdominio-base-datos-y-branding.md`
 * `.cursor/rules/multi/02-backend-policy.md` ó `.cursor/rules/mono/02-backend-policy.md`
 * `docs/backend/PLAYBOOK_BACKEND_LARAVEL.md`
 * `docs/domain/DATA_MODEL.md`
