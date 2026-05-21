@@ -20,7 +20,9 @@ En productos **MONO**, la resolución de host, redirect y SQL **no** usa la tabl
 - SQL: registro de asociación por `cliente` (host, instancia, BD, credenciales)
 - Desarrollo: `cliente = demo`
 
-Esta regla **15** sigue aplicando en MONO la parte de **logo** (`{cliente}` = mismo slug que en la asociación SQL).
+Esta regla **15** sigue aplicando en MONO la parte de **logo** (`{cliente}` = mismo slug que en la asociación SQL) y la **conectividad SQL privada** (sección 6).
+
+Detalle de redirect y deploy: `docs/_base/resolucion-host-cliente-sql-mono.md`.
 
 ### 1.2) Proyectos MULTI o modelo clásico por host
 
@@ -106,8 +108,100 @@ Si el archivo no existe, definir comportamiento degradado único por producto (i
 
 ---
 
-## 6) Referencias
+## 6) Conectividad SQL privada (Tailscale) — MONO y multi-cliente
 
+Los SQL de cada `{cliente}` **no** se publican en Internet ni se abren puertos del firewall del cliente hacia AWS. El backend del deploy único se conecta por **red privada Tailscale**.
+
+Documentación operativa extendida: `docs/_base/_Tailscape.md`.  
+Patrón ERP equivalente (tabla `EMPRESAS_CONEXION`, header tenant): `docs/_base/regla-cursor-multitenant-paqsuite.md`.
+
+### 6.1 Arquitectura de conexión
+
+```text
+Usuario → {cliente}.{proyecto}.paqsystems.com → demo.{proyecto}.paqsystems.com
+       → Frontend (AWS) → Backend API (AWS)
+       → lookup (proyecto, cliente) en registro de conexiones
+       → HOST_TAILSCALE (ej. cliente1.tailnet.ts.net)
+       → SQL Server del cliente (sin IP pública)
+```
+
+**Prohibido:** `Frontend → SQL Server` directo. Siempre `Frontend → Backend → SQL`.
+
+### 6.2 Registro de asociación (tabla central)
+
+En el SQL **central del deploy** (o config cifrada equivalente) mantener filas por `(proyecto, cliente)`. Nombre sugerido alineado al ERP: **`EMPRESAS_CONEXION`** (o `CLIENTES_CONEXION` si el producto lo renombra).
+
+| Campo | Uso |
+|-------|-----|
+| `CODIGO_TENANT` / `cliente` | Mismo slug que `{cliente}` del host y logo (`acme`, `demo`) |
+| `proyecto` | Slug del producto (`pedidosweb`, …) |
+| `DOMINIO` | Host de entrada esperado (ej. `acme.pedidosweb.paqsystems.com`) |
+| `HOST_TAILSCALE` | Hostname Tailscale del SQL (ej. `acme.tailnet.ts.net`) — **no** IP pública del cliente |
+| `SQL_DATABASE` | Nombre de base (ej. `paqsystems_pedidosweb_acme`) |
+| `SQL_INSTANCE` | Instancia nombrada (opcional) |
+| `SQL_USER` | Usuario dedicado (ej. `paqsuite_api`), **nunca** `sa` |
+| `SQL_PASSWORD_ENCRYPTED` | Secreto cifrado; no en repo ni `.env` commiteado |
+| `ACTIVO` | Habilita o no el cliente |
+
+Ejemplo mínimo de esquema (adaptar tipos al motor central):
+
+```sql
+-- Referencia; motor y prefijos según producto
+CREATE TABLE EMPRESAS_CONEXION (
+    ID              INT PRIMARY KEY IDENTITY,
+    CODIGO_TENANT   VARCHAR(50) NOT NULL,
+    PROYECTO        VARCHAR(50) NOT NULL,
+    DOMINIO         VARCHAR(150) NOT NULL,
+    HOST_TAILSCALE  VARCHAR(200) NOT NULL,
+    SQL_DATABASE    VARCHAR(100) NOT NULL,
+    SQL_USER        VARCHAR(100) NOT NULL,
+    SQL_PASSWORD_ENCRYPTED VARBINARY(MAX) NOT NULL,
+    ACTIVO          BIT NOT NULL DEFAULT 1,
+    UNIQUE (PROYECTO, CODIGO_TENANT)
+);
+```
+
+### 6.3 Identificación del cliente en API (header)
+
+Convención **MONO / productos nuevos:**
+
+```http
+X-Paq-Cliente: acme
+```
+
+Equivalente conceptual al `X-Tenant` del documento multitenant ERP; usar **un solo nombre** por producto y documentarlo. El proxy que hace redirect `{cliente}.{proyecto}` → `demo.{proyecto}` puede **inyectar** este header.
+
+**Backend:** leer header, validar fila en `EMPRESAS_CONEXION` (`ACTIVO = 1`), construir connection string dinámico hacia `HOST_TAILSCALE`. **No** confiar solo en el frontend: validar host/origen cuando aplique.
+
+**Frontend:** centralizar resolución de `cliente` (helper / interceptor Axios); en desarrollo `cliente = demo` (`localhost`, IP LAN, `VITE_TENANT_OVERRIDE` opcional con prioridad documentada en el producto).
+
+### 6.4 Desarrollo (`demo`)
+
+- `cliente` / tenant forzado = **`demo`**.
+- Fila `demo` en `EMPRESAS_CONEXION` apunta al SQL de desarrollo (Tailscale o red local acordada).
+- Base sugerida: `paqsystems_{proyecto}_demo`.
+
+### 6.5 Cache, logging y seguridad
+
+| Tema | Regla |
+|------|--------|
+| Cache | Cachear filas de `EMPRESAS_CONEXION` en backend (TTL sugerido **5 min**); invalidar al actualizar registro. |
+| Logging | Registrar `cliente`, `proyecto`, hostname, endpoint, usuario, fallback `demo`, errores SQL/Tailscale (sin passwords). |
+| SQL | Usuario mínimo privilegio (`paqsuite_api`); no `sa`. |
+| Red | ACLs Tailscale por cliente; cada cliente con nodo SQL en su tailnet. |
+
+### 6.6 DNS (producción MONO)
+
+- Wildcard o registros por cliente hacia el **mismo** frontend/backend (deploy `demo.{proyecto}`).
+- Entrada: `*.pedidosweb.paqsystems.com` o CNAME por `{cliente}.pedidosweb` → redirect a `demo.pedidosweb` (ver `resolucion-host-cliente-sql-mono.md`).
+
+---
+
+## 7) Referencias
+
+* `docs/_base/resolucion-host-cliente-sql-mono.md` — deploy único, redirect, header `cliente`
+* `docs/_base/regla-cursor-multitenant-paqsuite.md` — tenant, `X-Tenant`, flujo ERP
+* `docs/_base/_Tailscape.md` — implementación Tailscale
 * `.cursor/rules/02-backend-policy.md`
 * `.cursor/rules/05-data-access-orm-sql.md`
 * `.cursor/rules/07-versioning-and-deploy.md`
