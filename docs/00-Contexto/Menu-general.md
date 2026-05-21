@@ -110,7 +110,3 @@ El componente **sidebar** consume la API al montar el layout principal:
 | API menú | Rol en empresa única | Rol según `X-Company-Id` |
 
 ---
-
-## Historias de usuario de origen
-
-`001-Seguridad`: HU-015 (seed menú), HU-016 (API menú), HU-017 (sidebar dinámico), HU-018 (`routeName` / `enabled` en seed). `hu-anteriores` HU-003 (nueva pestaña).

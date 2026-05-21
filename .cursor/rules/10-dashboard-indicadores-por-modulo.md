@@ -76,4 +76,4 @@ Las historias del módulo deben incluir:
 
 ## Referencias
 
-* `docs/design/paqsystems-main-shell-design.md`
+* `docs/_base/shell-layout-principal.md` (layout post-login; área principal / dashboard de inicio)

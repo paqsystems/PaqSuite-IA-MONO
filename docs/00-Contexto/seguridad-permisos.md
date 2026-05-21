@@ -106,7 +106,3 @@ Los ABM de usuarios, roles, permisos y atributos (ver `administracion-seguridad.
 | Validación API gestión | Sin header tenant; Company DB única | `X-Company-Id` obligatorio |
 
 ---
-
-## Historias de usuario de origen
-
-`001-Seguridad`: HU-012 (roles), HU-013 (permisos), HU-014 (atributos rol), HU-016 (API menú). HU-002 y validación tenant en MULTI.

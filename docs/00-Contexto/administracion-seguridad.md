@@ -82,8 +82,4 @@ Versión MULTI — Administración de empresas (HU-011)
 
 Las opciones de administración (Usuarios, Roles, Permisos, Atributos de rol, etc.) deben existir en `pq_menus` con `routeName` y `enabled` correctos para el sidebar dinámico. Ver `Menu-general.md`.
 
----
-
-## Historias de usuario de origen
-
-`001-Seguridad`: HU-010 (usuarios), HU-012 (roles), HU-013 (permisos), HU-014 (atributos). HU-011 (empresas) solo MULTI.
+-

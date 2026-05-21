@@ -11,6 +11,21 @@ Definir la convención **obligatoria** para:
 
 Apunta a proyectos PaqSystems desplegados con URLs de tipo subdominio bajo `paqsystems.com`, con Laravel y frontend en el mismo criterio de identificación por host.
 
+### 1.1) Proyectos MONO (deploy único)
+
+En productos **MONO**, la resolución de host, redirect y SQL **no** usa la tabla de la sección 5 como única verdad: ver **`docs/_base/resolucion-host-cliente-sql-mono.md`**:
+
+- Deploy canónico: `demo.{proyecto}.paqsystems.com`
+- Entrada usuario: `{cliente}.{proyecto}.paqsystems.com` → redirect a `demo` + contexto `{cliente}`
+- SQL: registro de asociación por `cliente` (host, instancia, BD, credenciales)
+- Desarrollo: `cliente = demo`
+
+Esta regla **15** sigue aplicando en MONO la parte de **logo** (`{cliente}` = mismo slug que en la asociación SQL).
+
+### 1.2) Proyectos MULTI o modelo clásico por host
+
+Las secciones 2–5 siguientes describen resolución directa `paqsystems_{proyecto}_{cliente}` desde el host sin redirect a `demo` (multi-empresa ERP / productos que no usen deploy único MONO).
+
 ---
 
 ## 2) Forma del host en producción

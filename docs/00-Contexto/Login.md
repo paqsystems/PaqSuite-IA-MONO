@@ -117,15 +117,13 @@ Versión MULTI — Logout
 
 ## Post-login (layout principal)
 
-Tras acceso exitoso:
+Tras acceso exitoso el usuario entra al **shell** estándar PaqSuite (cuatro zonas: header, sidebar, área principal, footer). Estructura y criterios visuales: **`docs/_base/shell-layout-principal.md`** (bosquejo en `docs/_base/Bosquejo-pantalla-principal.jpg`).
 
-- **Sidebar** con menú filtrado por permisos (ver `Menu-general.md`, `seguridad-permisos.md`).
-- Header: selector de **idioma**, menú **avatar** (sin selector de empresa en MONO).
-- Área de contenido (pestañas de procesos en desktop/tablet según shell).
-- Tema DevExtreme según `users.theme` (ver `apariencia-temas.md`).
+Resumen alineado a MONO:
 
----
+- **Header:** logo cliente (izquierda), selector de **idioma**, menú **avatar** (derecha; ítems según `menu-avatar.md`, en MONO incluye **Apariencia** DevExtreme). Sin selector de empresa en MONO (eso es distintivo **MULTI**).
+- **Sidebar:** menú filtrado por permisos (`Menu-general.md`, `seguridad-permisos.md`).
+- **Área principal:** dashboard/indicadores en inicio; procesos y pestañas según producto.
+- **Footer:** rol o usuario, versión, leyenda «Diseñado por PaqSystems®».
+- Tema DevExtreme según `users.theme` (`apariencia-temas.md`).
 
-## Historias de usuario de origen
-
-`001-Seguridad`: HU-001 (login), HU-003 (logout), HU-004 (cambio contraseña), HU-005 (recuperación). HU-002 (selección empresa) solo MULTI.

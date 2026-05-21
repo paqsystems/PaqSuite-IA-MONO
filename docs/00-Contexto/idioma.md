@@ -133,9 +133,3 @@ Correos transaccionales (ej. recuperación de contraseña) deben enviarse en el 
 - Datos de negocio: nombres de clientes, descripciones de artículos, textos libres cargados por usuarios en Company DB.
 - Valores de parámetros (`Valor_*`) mostrados como dato configurado, no como etiqueta de UI.
 
-
----
-
-## Historias de usuario de origen
-
-`hu-anteriores`: HU-004, HU-008. Selector también en login (épica Seguridad).

@@ -12,7 +12,9 @@ Al cambiar la apariencia, **toda** la superficie visible debe reflejarla de inme
 
 ## Apariencia en versión MONO (alcance actual)
 
-En **monoempresa** no hay configuración de tema por tenant ni por administración de empresas. La estética del sistema la define **cada usuario** desde el menú avatar.
+En **monoempresa** no hay configuración de tema por tenant ni por administración de empresas. La estética la define **cada usuario** desde el menú avatar.
+
+Esta es la **preferencia distintiva MONO** frente a MULTI: en MULTI el cambio de empresa va en menú avatar/header; en MONO, en su lugar, va la **selección de apariencia DevExtreme** (`docs/_base/shell-layout-principal.md`, tabla MONO/MULTI).
 
 ### Dónde se elige
 

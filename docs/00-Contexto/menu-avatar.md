@@ -2,6 +2,10 @@
 
 Documento de reingeniería: menú desplegable bajo el **avatar del usuario** en el extremo derecho del header principal.
 
+**Layout:** ubicación y marco del shell en `docs/_base/shell-layout-principal.md`.
+
+**MONO vs MULTI (menú avatar):** en **MONO** la preferencia distintiva es **Apariencia** (tema DevExtreme por usuario, sección más abajo). En **MULTI** la distintiva es **Cambiar empresa activa** (bloque comentado más abajo); no se duplica otra spec de layout por esa diferencia.
+
 ## Presentación
 
 - Ubicación: extremo derecho del frame superior.
@@ -89,8 +93,4 @@ Cierra la sesión de forma segura (ver `Login.md`):
 - Redirigir a login; peticiones con token previo → 401.
 
 ---
-
-## Historias de usuario de origen
-
-`001-Seguridad`: HU-003 (logout), HU-004 (cambio contraseña vía menú). `hu-anteriores` / generalidades: HU-003 (nueva pestaña), HU-010 (Asistente IA), apariencia mono. HU-002 (cambio empresa) solo MULTI.
 

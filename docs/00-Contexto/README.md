@@ -9,6 +9,13 @@ Estos documentos son la fuente para volver a generar HUs, specs técnicas y tare
 
 ## Índice por tema
 
+### Diseño compartido (`docs/_base` en el producto, symlink a PaqSuite-IA-BASE)
+
+| Archivo | Contenido |
+|---------|-----------|
+| `docs/_base/shell-layout-principal.md` | Shell post-login (header, sidebar, content, footer); MONO y MULTI |
+| `docs/_base/Bosquejo-pantalla-principal.jpg` | Referencia visual del layout |
+
 ### Acceso y sesión
 
 | Archivo | Contenido | Origen principal |
@@ -45,8 +52,9 @@ Estos documentos son la fuente para volver a generar HUs, specs técnicas y tare
 
 | Tema | MONO (este proyecto) | MULTI (futuro, bloques `<!-- -->`) |
 |------|----------------------|-------------------------------------|
-| Empresa activa | Una sola; sin selector ni `X-Company-Id` | HU-002, menú avatar, `Pq_Permiso` multi |
-| Apariencia | `users.theme` en menú avatar | `PQ_Empresa.Theme` por tenant |
+| Host / SQL (infra) | `docs/_base/resolucion-host-cliente-sql-mono.md`: deploy `demo.{proyecto}`, redirect `{cliente}.{proyecto}`, SQL por asociación; dev = `demo` | **MULTI:** Dictionary/Company + `X-Company-Id` |
+| Empresa activa (UI) | Sin selector de empresa en app | **MULTI:** cambio de empresa en menú avatar / header |
+| Apariencia | **`users.theme` — ítem Apariencia en menú avatar** (preferencia distintiva MONO) | **MULTI:** `PQ_Empresa.Theme` en administración de empresas (no selector personal en avatar) |
 | Parámetros / API datos | Company DB única | Resolución por `X-Company-Id` |
 | Admin empresas | No catálogo multi-tenant | HU-011 completa |
 

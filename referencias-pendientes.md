@@ -19,7 +19,7 @@ Las siguientes rutas aparecen como referencias; conviene ubicarlas en el mono-re
 | `docs/03-historias-usuario/000-Generalidades/HU-007-Parametros-generales.md` | `.cursor/rules/11-parametros-generales-por-modulo.md`, `.cursor/rules/12-plan-tareas-hu-parametros-generales.md` |
 | `docs/06-operacion/deploy-infraestructura.md` | `.cursor/rules/07-versioning-and-deploy.md` |
 | `docs/backend/PLAYBOOK_BACKEND_LARAVEL.md` | `.cursor/rules/02-backend-policy.md`, `.cursor/rules/05-data-access-orm-sql.md` |
-| `docs/design/paqsystems-main-shell-design.md` | `.cursor/rules/10-dashboard-indicadores-por-modulo.md` |
+| `docs/design/paqsystems-main-shell-design.md` | Obsoleto como ruta; usar **`docs/_base/shell-layout-principal.md`** (repo PaqSuite-IA-BASE, vía symlink `docs/_base`) |
 | `docs/domain/DATA_MODEL.md` | `.cursor/rules/02-backend-policy.md`, `.cursor/rules/05-data-access-orm-sql.md` |
 | `docs/frontend/devextreme-norms.md` | `.cursor/rules/08-devextreme-grid-standards.md` |
 | `docs/frontend/ui-layer-wrappers.md` | `.cursor/rules/08-devextreme-grid-standards.md` |
