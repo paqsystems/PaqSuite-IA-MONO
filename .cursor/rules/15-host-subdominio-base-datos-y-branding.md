@@ -11,22 +11,23 @@ Definir la convención **obligatoria** para:
 
 Apunta a proyectos PaqSystems desplegados con URLs de tipo subdominio bajo `paqsystems.com`, con Laravel y frontend en el mismo criterio de identificación por host.
 
-### 1.1) Proyectos MONO (deploy único)
+### 1.1) Proyectos MONO (frontend + backend por proyecto)
 
-En productos **MONO**, la resolución de host, redirect y SQL **no** usa la tabla de la sección 5 como única verdad: ver **`docs/_base/resolucion-host-cliente-sql-mono.md`**:
+En productos **MONO**, la resolución de host, redirect y SQL **no** usa la tabla de la sección 5 como única verdad: ver **`docs/_base/resolucion-host-cliente-sql-mono.md`**.
 
-- Deploy canónico: `demo.{proyecto}.paqsystems.com`
-- Entrada usuario: `{cliente}.{proyecto}.paqsystems.com` → redirect a `demo` + contexto `{cliente}`
-- SQL: registro de asociación por `cliente` (host, instancia, BD, credenciales)
-- Desarrollo: `cliente = demo`
+- **Entrada:** `{cliente}.{proyecto}.paqsystems.com`
+- **Redirect a:** `frontend.{proyecto}.paqsystems.com` (conservando `{cliente}`)
+- **API:** `backend.{proyecto}.paqsystems.com` con header **`X-Paq-Cliente`**
+- **SQL:** fila en `EMPRESAS_CONEXION` por `{proyecto}` + `{cliente}`
+- **Desarrollo:** `cliente = demo` (salvo otro slug en OpenSpec del producto)
 
-Esta regla **15** sigue aplicando en MONO la parte de **logo** (`{cliente}` = mismo slug que en la asociación SQL) y la **conectividad SQL privada** (sección 6).
+Un artefacto de frontend y un artefacto de backend **por `{proyecto}`**; **no** deploy por cliente ni selector de empresa en UI (MULTI ERP).
 
-Detalle de redirect y deploy: `docs/_base/resolucion-host-cliente-sql-mono.md`.
+Esta regla **15** aplica en MONO **logo** (mismo `{cliente}`) y **conectividad SQL privada** (sección 6). Índice: `docs/_mono/README-host-y-tenant.md`.
 
 ### 1.2) Proyectos MULTI o modelo clásico por host
 
-Las secciones 2–5 siguientes describen resolución directa `paqsystems_{proyecto}_{cliente}` desde el host sin redirect a `demo` (multi-empresa ERP / productos que no usen deploy único MONO).
+Las secciones 2–5 siguientes describen resolución directa `paqsystems_{proyecto}_{cliente}` desde el host sin redirect MONO (multi-empresa ERP / productos que no usen el patrón `frontend.{proyecto}` / `backend.{proyecto}`).
 
 ---
 
@@ -118,11 +119,10 @@ Patrón ERP equivalente (tabla `EMPRESAS_CONEXION`, header tenant): `docs/_base/
 ### 6.1 Arquitectura de conexión
 
 ```text
-Usuario → {cliente}.{proyecto}.paqsystems.com → demo.{proyecto}.paqsystems.com
-       → Frontend (AWS) → Backend API (AWS)
+Usuario → {cliente}.{proyecto}.paqsystems.com → frontend.{proyecto}.paqsystems.com
+       → Frontend (AWS) → backend.{proyecto}.paqsystems.com
        → lookup (proyecto, cliente) en registro de conexiones
-       → HOST_TAILSCALE (ej. cliente1.tailnet.ts.net)
-       → SQL Server del cliente (sin IP pública)
+       → HOST_TAILSCALE → SQL Server del cliente (sin IP pública)
 ```
 
 **Prohibido:** `Frontend → SQL Server` directo. Siempre `Frontend → Backend → SQL`.
@@ -169,7 +169,7 @@ Convención **MONO / productos nuevos:**
 X-Paq-Cliente: acme
 ```
 
-Equivalente conceptual al `X-Tenant` del documento multitenant ERP; usar **un solo nombre** por producto y documentarlo. El proxy que hace redirect `{cliente}.{proyecto}` → `demo.{proyecto}` puede **inyectar** este header.
+Equivalente conceptual al `X-Tenant` del documento multitenant ERP. El proxy que redirige `{cliente}.{proyecto}` → `frontend.{proyecto}` puede **inyectar** `X-Paq-Cliente` hacia `backend.{proyecto}`.
 
 **Backend:** leer header, validar fila en `EMPRESAS_CONEXION` (`ACTIVO = 1`), construir connection string dinámico hacia `HOST_TAILSCALE`. **No** confiar solo en el frontend: validar host/origen cuando aplique.
 
@@ -192,8 +192,7 @@ Equivalente conceptual al `X-Tenant` del documento multitenant ERP; usar **un so
 
 ### 6.6 DNS (producción MONO)
 
-- Wildcard o registros por cliente hacia el **mismo** frontend/backend (deploy `demo.{proyecto}`).
-- Entrada: `*.pedidosweb.paqsystems.com` o CNAME por `{cliente}.pedidosweb` → redirect a `demo.pedidosweb` (ver `resolucion-host-cliente-sql-mono.md`).
+- Wildcard o CNAME: `{cliente}.{proyecto}` → redirect a `frontend.{proyecto}`; API en `backend.{proyecto}` (ver `resolucion-host-cliente-sql-mono.md`).
 
 ---
 

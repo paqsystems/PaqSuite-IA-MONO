@@ -36,6 +36,12 @@ Cuando el proceso permita alta desde listado:
 
 * usar íconos nativos DevExtreme
 * no usar columna textual “Acciones”
+* cada ícono con **tooltip** (`hint`) e i18n — regla base: `.cursor/rules/base/20-frontend/28-ui-grilla-acciones-iconos-tooltip.md`
+
+### Acciones custom por fila (detalle, duplicar, etc.)
+
+* mismo patrón: **ícono DevExtreme + tooltip**, no botones con texto
+* ver `.cursor/rules/base/20-frontend/28-ui-grilla-acciones-iconos-tooltip.md`
 
 ---
 

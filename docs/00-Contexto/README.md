@@ -1,64 +1,98 @@
-# Documentación mono (_mono)
+# Documentación mono (`_mono`)
 
-Carpeta de **reingeniería inversa**: especificaciones en lenguaje natural reconstruidas a partir de historias de usuario en:
+Carpeta de **contexto funcional compartido** para proyectos **monoempresa**. Reúne la definición conceptual del framework en lenguaje humano y funciona como fuente para regenerar HUs, OpenSpec, tareas técnicas y arquitectura.
 
-- `../hu-anteriores/` — épica 000 Generalidades
-- `../001-Seguridad/` — épica 001 Seguridad y Acceso
+El alcance vigente del repositorio es **MONO**. Las referencias a **MULTI** se conservan solo como variante futura y deben leerse con ese criterio.
 
-Estos documentos son la fuente para volver a generar HUs, specs técnicas y tareas. El despliegue objetivo es **monoempresa** salvo bloques explícitos comentados para versión **MULTI**.
+## Propósito de la carpeta
 
-## Índice por tema
+Esta carpeta no describe una implementación técnica puntual ni un producto específico. Su función es capturar el marco conceptual común del sistema para después derivar:
 
-### Diseño compartido (`docs/_base` en el producto, symlink a PaqSuite-IA-BASE)
+1. historias de usuario en `docs/03-historias-usuario/`,
+2. tareas técnicas en `docs/04-tareas/`,
+3. especificaciones formales en `docs/05-open-spec/`,
+4. decisiones de implementación en `docs/01-arquitectura/`.
+
+## Estructura por dominios
+
+### `00-arquitectura-api`
 
 | Archivo | Contenido |
 |---------|-----------|
-| `docs/_base/shell-layout-principal.md` | Shell post-login (header, sidebar, content, footer); MONO y MULTI |
+| [envelope-respuestas.md](./00-arquitectura-api/envelope-respuestas.md) | Formato JSON obligatorio: `error`, `respuesta`, `resultado` |
+| [00-instalacion-scaffold-fullstack.md](./00-instalacion-scaffold-fullstack.md) | **Instalación inicial** Laravel 10 + envelope + React/Vite/DevExtreme |
+
+### `01-experiencia-base`
+
+| Archivo | Contenido |
+|---------|-----------|
+| [estructura-sitio.md](./01-experiencia-base/estructura-sitio.md) | Mapa funcional del sitio y tipologías de pantalla |
+| [shell-layout.md](./01-experiencia-base/shell-layout.md) | Aterrizaje MONO del shell post-login |
+| [menu-general.md](./01-experiencia-base/menu-general.md) | Sidebar, seed `pq_menus`, API y navegación |
+| [menu-avatar.md](./01-experiencia-base/menu-avatar.md) | Perfil, apariencia, nueva pestaña, ayuda y logout |
+| [navegacion-pestanas.md](./01-experiencia-base/navegacion-pestanas.md) | Preferencia de apertura en misma o nueva pestaña |
+| [idioma-multilingual.md](./01-experiencia-base/idioma-multilingual.md) | Idioma, i18n y alcance transversal |
+| [apariencia-temas.md](./01-experiencia-base/apariencia-temas.md) | Temas DevExtreme por usuario y estándar visual |
+| [ayuda-externa-asistente.md](./01-experiencia-base/ayuda-externa-asistente.md) | Acceso global a ayuda externa o Asistente IA |
+
+### `02-acceso-y-seguridad`
+
+| Archivo | Contenido |
+|---------|-----------|
+| [login-y-sesion.md](./02-acceso-y-seguridad/login-y-sesion.md) | Login, recuperación, cambio de contraseña y logout |
+| [usuarios-roles-permisos-resumen.md](./02-acceso-y-seguridad/usuarios-roles-permisos-resumen.md) | Mapa conceptual rápido de identidad, roles y permisos |
+| [seguridad-permisos.md](./02-acceso-y-seguridad/seguridad-permisos.md) | Roles, permisos y autorización |
+| [administracion-seguridad.md](./02-acceso-y-seguridad/administracion-seguridad.md) | ABM de usuarios, roles, permisos y atributos |
+| [menu-y-autorizacion.md](./02-acceso-y-seguridad/menu-y-autorizacion.md) | Relación entre `pq_menus`, roles y sidebar |
+
+### `03-ui-transversal`
+
+| Archivo | Contenido |
+|---------|-----------|
+| [grillas.md](./03-ui-transversal/grillas.md) | Estándar de grillas, layouts, exportación y baja |
+| [pivots.md](./03-ui-transversal/pivots.md) | Tablas dinámicas y exportación pivot |
+| [exportaciones.md](./03-ui-transversal/exportaciones.md) | Criterio común de exportación para grillas y pivots |
+| [plantillas.md](./03-ui-transversal/plantillas.md) | Tipologías reutilizables de pantalla |
+| [patrones-abm.md](./03-ui-transversal/patrones-abm.md) | Comportamientos comunes de alta, baja y modificación |
+
+### `04-configuracion-global`
+
+| Archivo | Contenido |
+|---------|-----------|
+| [parametros-generales.md](./04-configuracion-global/parametros-generales.md) | Proceso transversal de `PQ_PARAMETROS_GRAL` |
+| [configuracion-funcional-por-modulo.md](./04-configuracion-global/configuracion-funcional-por-modulo.md) | Criterio de qué corresponde parametrizar por módulo |
+
+### `05-variantes-y-alcance`
+
+| Archivo | Contenido |
+|---------|-----------|
+| [mono-vs-multi-referencias.md](./05-variantes-y-alcance/mono-vs-multi-referencias.md) | Diferencias de alcance entre MONO y MULTI |
+
+## Diseño compartido en `docs/_base`
+
+Algunos activos visuales y lineamientos base siguen viviendo en `docs/_base`:
+
+| Archivo | Contenido |
+|---------|-----------|
+| `docs/_base/shell-layout-principal.md` | Shell post-login compartido entre MONO y MULTI |
 | `docs/_base/Bosquejo-pantalla-principal.jpg` | Referencia visual del layout |
-
-### Acceso y sesión
-
-| Archivo | Contenido | Origen principal |
-|---------|-----------|------------------|
-| [Login.md](./Login.md) | Login Sanctum, recuperación/cambio contraseña, logout, post-login MONO | 001: HU-001, HU-003, HU-004, HU-005 |
-| [idioma.md](./idioma.md) | i18n, selector, banderas, `users.locale` | 000: HU-004, HU-008 |
-| [menu-avatar.md](./menu-avatar.md) | Perfil, apariencia, nueva pestaña, Asistente IA, logout | 001 + 000 |
-| [apariencia-temas.md](./apariencia-temas.md) | Temas DevExtreme por usuario (menú avatar) | 000: HU-011 UI; no tema por empresa en MONO |
-
-### Menú y seguridad
-
-| Archivo | Contenido | Origen principal |
-|---------|-----------|------------------|
-| [Menu-general.md](./Menu-general.md) | Seed `pq_menus`, API menú, sidebar dinámico, iconos | 001: HU-015–HU-018 |
-| [seguridad-permisos.md](./seguridad-permisos.md) | Roles, permisos, atributos, resolución de menú | 001: HU-012–HU-014, HU-016 |
-| [administracion-seguridad.md](./administracion-seguridad.md) | ABM usuarios, roles, permisos, atributos | 001: HU-010, HU-012–HU-014; HU-011 MULTI |
-
-### Datos y UI transversal
-
-| Archivo | Contenido | Origen principal |
-|---------|-----------|------------------|
-| [grillas.md](./grillas.md) | Estándar grilla, layouts, export Excel, eliminar ABM | 000: HU-001, HU-006, HU-009 |
-| [pivots.md](./pivots.md) | PivotGrid y export tabla dinámica | 000: HU-006 |
-| [parametros-generales.md](./parametros-generales.md) | `PQ_PARAMETROS_GRAL` por módulo | 000: HU-007 |
 
 ## Flujo recomendado
 
-1. Leer el documento mono del dominio.
-2. Derivar o actualizar historias de usuario (OpenSpec / `docs/03-historias-usuario/`).
-3. Bajar a specs de arquitectura, API y UI.
+1. Leer el documento de contexto del dominio correspondiente.
+2. Derivar o actualizar HUs y OpenSpec.
+3. Bajar a especificaciones de arquitectura, API y UI.
 4. Implementar y validar contra criterios de aceptación.
 
-## Convenciones MONO / MULTI
+## Criterio MONO vs MULTI
 
-| Tema | MONO (este proyecto) | MULTI (futuro, bloques `<!-- -->`) |
-|------|----------------------|-------------------------------------|
-| Host / SQL (infra) | `docs/_base/resolucion-host-cliente-sql-mono.md`: deploy `demo.{proyecto}`, redirect `{cliente}.{proyecto}`, SQL por asociación; dev = `demo` | **MULTI:** Dictionary/Company + `X-Company-Id` |
-| Empresa activa (UI) | Sin selector de empresa en app | **MULTI:** cambio de empresa en menú avatar / header |
-| Apariencia | **`users.theme` — ítem Apariencia en menú avatar** (preferencia distintiva MONO) | **MULTI:** `PQ_Empresa.Theme` en administración de empresas (no selector personal en avatar) |
-| Parámetros / API datos | Company DB única | Resolución por `X-Company-Id` |
-| Admin empresas | No catálogo multi-tenant | HU-011 completa |
+Resumen rápido:
 
-## Notas de numeración
+| Tema | MONO | MULTI |
+|------|------|-------|
+| Empresa activa | Fija por despliegue | Seleccionable por usuario |
+| Apariencia | `users.theme` por usuario | Frecuentemente por empresa |
+| API de datos | Sin `X-Company-Id` | Con `X-Company-Id` |
+| Administración de empresas | No aplica | Puede existir |
 
-- **HU-011** en `hu-anteriores` = UI full DevExtreme; **HU-011** en `001-Seguridad` = administración de empresas (MULTI).
-- Al regenerar HUs mono, usar numeración de épica PedidosWeb/OpenSpec, no copiar tal cual la del repo legacy.
+Detalle ampliado: `05-variantes-y-alcance/mono-vs-multi-referencias.md`.
