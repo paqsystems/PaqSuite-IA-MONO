@@ -75,9 +75,10 @@ Esto incluye:
 - botones, toggles y títulos de popup,
 - validaciones, errores y toasts,
 - ítems del menú general y menú avatar,
-- textos de login y recuperación,
+- textos de login, recuperación y mail de link a cambio de contraseña
 - captions y tooltips de parámetros generales,
 - toolbar, mensajes vacíos y totalizadores de grillas y pivots.
+- apariencias de temas DevExtreme.
 
 No entra en esta obligación el dato de negocio en sí, como nombres de clientes, descripciones libres o valores cargados por usuarios.
 
