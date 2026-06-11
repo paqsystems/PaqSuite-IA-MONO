@@ -43,6 +43,8 @@ CREATE TABLE dbo.PQ_EXCEL_PROCESOS (
 GO
 ```
 
+**`PermiteProcesamientoParcial`** (por proceso): si es `0` (default), la existencia de **≥ 1 fila con error** en staging **impide** el procesamiento final del lote. Si es `1`, el usuario puede procesar solo las filas válidas y el lote puede cerrar en `procesada_parcial`. No aplica a errores estructurales del archivo (columnas, encabezados, etc.).
+
 ### Tabla: `PQ_EXCEL_PROCESOS_CAMPOS`
 
 ```sql
@@ -335,7 +337,7 @@ GO
 
 ## 8. Observaciones de diseño
 
-- `PQ_EXCEL_PROCESOS` define la configuración fija por proceso.
+- `PQ_EXCEL_PROCESOS` define la configuración fija por proceso, incluida **`PermiteProcesamientoParcial`** (§6.1 documento conceptual).
 - `PQ_EXCEL_PROCESOS_CAMPOS` define la estructura esperada de cada plantilla.
 - `PQ_EXCEL_IMPORTACIONES` representa el lote o sesión de importación.
 - `PQ_EXCEL_IMPORTACIONES_FILAS` guarda el staging por fila.

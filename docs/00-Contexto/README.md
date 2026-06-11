@@ -60,6 +60,7 @@ Esta carpeta no describe una implementación técnica puntual ni un producto esp
 | Archivo | Contenido |
 |---------|-----------|
 | [parametros-generales.md](./04-configuracion-global/parametros-generales.md) | Proceso transversal de `PQ_PARAMETROS_GRAL` |
+| [`docs/_base/pq-parametros-gral-tipo-valor.md`](../../../../_base/pq-parametros-gral-tipo-valor.md) (BASE) | Catálogo **`tipo_valor`** (S/T/I/D/B/N) y mapeo a `Valor_*` |
 | [configuracion-funcional-por-modulo.md](./04-configuracion-global/configuracion-funcional-por-modulo.md) | Criterio de qué corresponde parametrizar por módulo |
 
 ### `05-variantes-y-alcance`

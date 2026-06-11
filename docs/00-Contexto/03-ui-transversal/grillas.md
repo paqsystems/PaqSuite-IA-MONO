@@ -82,8 +82,10 @@ Los controles de layouts deben estar visibles en la zona superior inmediata de l
 - Cada grilla se identifica por `proceso + grid_id`.
 - Todos los usuarios pueden ver y aplicar layouts existentes del mismo proceso y grilla.
 - Solo el creador puede modificar o eliminar un layout guardado por ese mismo usuario.
+- Los layouts **propios** del usuario se distinguen en el selector con sufijo **` (*)`** al final del nombre.
 - Un usuario puede partir de un layout ajeno y generar uno nuevo propio mediante **Guardar como**.
-- Si el formato visible corresponde a la plantilla original del sistema, la acción **Guardar** se interpreta como **Guardar como**.
+- **Plantilla del sistema** (`layoutId: null`) restaura la grilla original del proceso (columnas por defecto); no persiste fila en BD.
+- Si el formato visible corresponde a la plantilla original del sistema, la acción **Guardar** se interpreta como **Guardar como** (no altera la plantilla base).
 - Al abrir la pantalla, el sistema debería restaurar el ultimo layout utilizado por el usuario si existe.
 
 ### Compartición
@@ -123,11 +125,12 @@ La acción debe estar disponible en la toolbar superior inmediata de la grilla, 
 ### Regla para la modalidad formateada
 
 - Mantiene el formato vigente de la vista y ademas aplica formato de Excel segun el tipo de dato.
-- Las fechas se exportan en formato legible acorde al locale o al criterio funcional definido.
+- Las fechas se exportan en formato legible acorde al **locale activo** (i18n).
 - Los campos enteros se exportan sin decimales.
-- Los campos numericos decimales conservan la cantidad de decimales correspondiente.
+- Los campos numericos decimales conservan la cantidad de decimales del campo (`column.format`; fallback 2 decimales).
+- Los booleanos se exportan como texto **VERDADERO** / **FALSO** (o equivalente i18n del locale).
 - Los importes, cantidades y porcentajes deben respetar su categoria funcional cuando la definicion del proceso la conozca.
-- Incluye encabezados resaltados, anchos de columna razonables y totales de pie cuando correspondan.
+- Incluye encabezados resaltados (negrita + fondo gris), anchos de columna razonables y **totalizadores de pie** (`totalFooter` / `groupFooter`) cuando correspondan.
 
 ### Alcance
 

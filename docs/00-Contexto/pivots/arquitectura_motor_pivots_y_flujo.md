@@ -213,7 +213,11 @@ Responsable de:
 - mostrar pivot resultante
 - permitir cambios de estructura
 - ofrecer exportaciones
-- exponer acciones de guardado
+- exponer acciones de guardado (Guardar, Guardar como, Cargar, Eliminar)
+- distinguir diseños propios con sufijo ` (*)` en el selector
+- ofrecer **Plantilla inicial** que restablece la pivot vacía (`configId: null`)
+- incluir ícono **Actualizar** para re-obtener datos con filtros vigentes
+- aplicar **i18n** a captions, field panel, Field Chooser y menús DevExtreme (ver `patron-i18n-pivot-devextreme.md`)
 
 ## 5.7 Capa de persistencia
 Responsable de:
@@ -281,18 +285,23 @@ El sistema debe decidir qué configuración usar al abrir el pivot.
 Orden recomendado:
 
 ### Opción A
+Último diseño usado por el usuario (si existe registro en `pq_pivots_config_last_used` o equivalente)
+
+### Opción B
 Pivot del sistema marcado como:
 - `es_pivot_sistema = 1`
 - `es_default = 1`
 
-### Opción B
-Pivot base definido por metadata técnica de la consulta
-
 ### Opción C
-Último pivot usado por el usuario, si más adelante se implementara esa lógica
+Pivot base definido por metadata técnica de la consulta (solo si la pantalla no inicia en plantilla inicial)
 
-Si no existe pivot guardado:
-- usar pivot base estándar
+### Plantilla inicial (selector)
+Opción fija **Plantilla inicial** (`configId: null`):
+- restablece la **pivot vacía** (sin campos en áreas del field panel)
+- cualquier cambio sobre ella hace que **Guardar** abra **Guardar como**
+- análoga a la plantilla del sistema en layouts de grilla (`layoutId: null`)
+
+> La pivot base de metadata sigue siendo obligatoria en la definición de consulta; la plantilla inicial en UI es el estado editable sin diseño persistido.
 
 ---
 
@@ -367,7 +376,9 @@ Además, debe mostrar:
 - selector de campos
 - configuración actual
 - acciones de exportación
-- acciones de guardado
+- acciones de guardado (toolbar)
+- ícono **Actualizar** (`pivotRefresh`) para re-fetch con filtros vigentes
+- selector de diseños con **Plantilla inicial** y sufijo ` (*)` en diseños propios
 
 ---
 
@@ -437,6 +448,9 @@ Y mostrando:
 - fecha de última modificación
 - si es pivot del sistema
 - si es default
+- si `isOwner` (para sufijo ` (*)` en UI)
+
+Además, el selector incluye siempre la opción **Plantilla inicial** (`configId: null`), que no proviene de `pq_pivots_config` sino del frontend.
 
 ---
 
@@ -444,14 +458,23 @@ Y mostrando:
 Cuando el usuario modifica un pivot existente y elige Guardar:
 
 Validaciones:
-- el pivot existe
+- el pivot existe (`configId` informado)
 - no está eliminado
 - el usuario actual es el creador
 - la configuración actual es válida
+- **no** está activa la plantilla inicial (`configId: null`) — en ese caso redirigir a Guardar como
 
 Acción:
 - actualizar `configuracion_json`
 - actualizar usuario y fecha de última modificación
+
+---
+
+## 8.2.1 Guardar desde plantilla inicial
+Cuando `configId: null` (pivot vacía):
+
+- **Guardar** abre diálogo **Guardar como** (POST)
+- no se modifica pivot base de metadata ni diseños ajenos
 
 ---
 
@@ -707,6 +730,7 @@ Interpretación:
 5. Los pivots guardados deben ser versionables y compatibles con la definición vigente.
 6. La exportación, persistencia y drill-down deben integrarse al mismo flujo general del motor.
 7. Debe evitarse toda lógica innecesariamente hardcodeada cuando pueda definirse por metadata.
+8. La UI del pivot debe replicar mejoras de grillas: diseños propios ` (*)`, plantilla inicial → pivot vacía, Guardar = Guardar como en plantilla inicial, ícono Actualizar e i18n DevExtreme completo.
 
 ---
 

@@ -108,9 +108,11 @@ No todas las consultas deben permitir pivot.
 
 ## Principio 3
 
-Toda consulta pivotable debe tener una **pivot base**.
+Toda consulta pivotable debe tener una **pivot base** en su definición de metadata.
 
-Esto evita que el usuario vea un pivot vacío.
+Esto garantiza un diseño de referencia útil para analistas e implementación.
+
+En la **UI**, la opción **Plantilla inicial** del selector permite al usuario volver a una **pivot vacía** (sin campos asignados) para diseñar desde cero; no contradice la existencia de la pivot base en catálogo.
 
 ------------------------------------------------------------------------
 
@@ -367,16 +369,24 @@ Los usuarios pueden guardar configuraciones de pivot.
 
 Operaciones permitidas:
 
--   Guardar
--   Guardar como
--   Eliminar
+- Guardar
+- Guardar como
+- Cargar (selector de diseños)
+- Eliminar
 
 Reglas:
 
--   todos los pivots son visibles para todos los usuarios
--   solo el creador puede modificar un pivot existente
--   solo el creador puede eliminarlo
--   cualquier usuario puede crear uno nuevo basado en otro
+- todos los pivots son visibles para todos los usuarios
+- solo el creador puede modificar un pivot existente
+- solo el creador puede eliminarlo
+- cualquier usuario puede crear uno nuevo basado en otro
+- los diseños **propios** del usuario se distinguen en el selector con sufijo visual **` (*)`** (i18n `pivotLayout.ownerMarker`); no se persiste en el nombre
+- la opción **Plantilla inicial** del selector restaura la **pivot vacía** (sin campos en filas, columnas, filtros internos ni valores); equivale a no tener diseño persistido activo
+- con **plantilla inicial** activa, el botón **Guardar** se comporta como **Guardar como** (no altera la pivot base de metadata ni diseños ajenos)
+- debe existir ícono **Actualizar** para volver a obtener datos con filtros y parámetros vigentes (i18n `pivot.refresh`)
+- captions, menús y textos propios del PivotGrid DevExtreme deben respetar i18n en los 5 idiomas (ver `patron-i18n-pivot-devextreme.md`)
+
+> Paridad funcional con layouts de grilla (HU-GEN-03): mismas reglas de propiedad, plantilla base y Guardar vs Guardar como.
 
 ------------------------------------------------------------------------
 
@@ -435,6 +445,8 @@ Este documento se complementa con:
 
 1.  **Especificación técnica de consultas pivotables (para Cursor)**\
 2.  **Modelo de datos para almacenamiento de pivots personalizados**
+3.  **Patrón UI PivotGrid DevExtreme** (`frontend-pivotgrid-devextreme-agregaciones-y-menu.md`)
+4.  **Patrón i18n PivotGrid** (`patron-i18n-pivot-devextreme.md`)
 
 ------------------------------------------------------------------------
 

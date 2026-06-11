@@ -16,7 +16,8 @@ El pivot no reemplaza a la grilla de detalle. Ambos modos deben poder convivir c
 - Aplicar totales y subtotales coherentes con el tipo de dato.
 - Exportar a Excel preservando la estructura pivot cuando el proceso lo permita.
 - Mantener el mismo estándar visual y de permisos del proceso base.
-- Partir de una pivot base util y no de una configuracion vacia cuando el proceso se abra por primera vez.
+- Partir de una **pivot base** util en la **primera apertura** de la consulta (metadata de la consulta), salvo que exista un ultimo diseno guardado del usuario.
+- La opcion **Plantilla inicial** del selector (`configId: null`) restablece una **pivot vacia** (sin campos en filas, columnas, filtros internos ni valores) para disenar desde cero.
 
 ## Totalizadores
 
@@ -80,7 +81,13 @@ Si el proceso admite layouts persistentes, deben guardarse tambien:
 - Todos los layouts o pivots guardados son visibles y utilizables por todos los usuarios autorizados al proceso.
 - Solo el creador puede modificar o eliminar uno existente.
 - Cualquier usuario puede basarse en uno compartido para crear uno propio.
+- Los disenos **propios** se distinguen en el selector con sufijo **` (*)`** (i18n `pivotLayout.ownerMarker`).
+- Con **plantilla inicial** activa, **Guardar** equivale a **Guardar como**.
+- Incluir icono **Actualizar** (`pivot.refresh`, `data-testid="pivotRefresh"`) para re-obtener datos con filtros vigentes.
+- Textos del PivotGrid DevExtreme via i18n en 5 idiomas (`patron-i18n-pivot-devextreme.md` en contexto pivots).
 - Los controles de layouts deben convivir visualmente con la exportacion en la parte superior inmediata del bloque pivot.
+
+Orden toolbar sugerido: `[actualizar] → [disenos guardados] → [export] → [extras]`.
 
 ## Alternancia con grilla
 

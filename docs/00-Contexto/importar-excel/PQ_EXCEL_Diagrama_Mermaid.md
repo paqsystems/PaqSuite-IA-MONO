@@ -105,6 +105,7 @@ erDiagram
 
 ## Lectura del diagrama
 
+- **`PermiteProcesamientoParcial`** en `PQ_EXCEL_PROCESOS`: por cada proceso, define si ≥ 1 fila con error permite o no procesar el resto de filas válidas (ver documento conceptual §6.1).
 - Un proceso puede tener muchos campos definidos.
 - Un proceso puede tener muchas importaciones ejecutadas.
 - Cada importación tiene muchas filas en staging.

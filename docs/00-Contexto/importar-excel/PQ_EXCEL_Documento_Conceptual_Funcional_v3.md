@@ -8,6 +8,7 @@ Este documento define el comportamiento funcional general del proceso de importa
 - El usuario no define el esquema ni mapea columnas manualmente.
 - El sistema debe permitir exportar una plantilla modelo por proceso.
 - El archivo importado debe ajustarse al diseño del proceso.
+- El archivo importado puede contener columnas adicionales a las requeridas en el diseño.
 - La identificación de columnas se realiza por nombre y no por posición.
 - El orden de las columnas no afecta la importación.
 - Toda ejecución debe registrarse como un lote independiente.
@@ -73,8 +74,8 @@ Encabezados inválidos:
 9. El sistema lee la información y la vuelca a staging.
 10. El sistema ejecuta validaciones de formato en frontend y validaciones de negocio en backend.
 11. El sistema presenta el resultado en una grilla DevExtreme.
-12. El usuario confirma el procesamiento final cuando corresponda.
-13. El sistema aplica la lógica final sobre el destino.
+12. El usuario confirma el procesamiento final cuando corresponda (según política del proceso — ver §6.1).
+13. El sistema aplica la lógica final sobre el destino solo sobre las filas habilitadas para procesar.
 14. El sistema deja auditoría completa del lote.
 
 ## 6. Reglas funcionales consolidadas
@@ -105,14 +106,53 @@ Encabezados inválidos:
 - La cancelación solo se permite antes del procesamiento final.
 - Debe existir historial de importaciones.
 
+### 6.1 Procesamiento ante filas con error (por proceso)
+
+Cada **proceso de importación** define si la existencia de **al menos una fila con error** (validación de formato o de negocio en staging) **permite o no** ejecutar el procesamiento final sobre el resto de los registros válidos.
+
+Parámetro de configuración en `PQ_EXCEL_PROCESOS`: **`PermiteProcesamientoParcial`**.
+
+| Valor | Comportamiento |
+|-------|----------------|
+| **`false`** (default) | Si el lote tiene **≥ 1 fila con error**, **no** se habilita el procesamiento final del lote. El usuario debe corregir el Excel y reimportar, o resolver los errores hasta dejar el lote sin filas erróneas. |
+| **`true`** | Si el lote tiene filas con error **y** filas válidas, el usuario **puede** confirmar el procesamiento: solo se aplican al destino las **filas válidas**; las filas con error quedan en staging sin procesar. El lote puede cerrar en estado **`procesada_parcial`**. |
+
+**Casos borde (cerrados)**
+
+| Situación | `PermiteProcesamientoParcial` | Resultado |
+|-----------|-------------------------------|-----------|
+| **Todas** las filas tienen error | `true` o `false` | **No** se habilita el procesamiento (no hay filas válidas que aplicar). |
+| **Cero** filas con error | `true` o `false` | Se procesa **todo** el conjunto; estado final **`procesada`** (no `procesada_parcial`). |
+| Mezcla: ≥ 1 error y ≥ 1 válida | `false` | No se habilita el procesamiento. |
+| Mezcla: ≥ 1 error y ≥ 1 válida | `true` | Se procesan solo las válidas; estado **`procesada_parcial`**. |
+
+**Alcance de la regla**
+
+- Aplica a **errores por fila** tras la carga en staging (tipo de dato, obligatoriedad de negocio, longitud, reglas del `HandlerBackend`, etc.).
+- **No** aplica a **errores estructurales de archivo** (columnas faltantes, encabezados inválidos, hoja incorrecta, etc.): esos bloquean el lote antes del staging y no admiten procesamiento parcial.
+
+**UI**
+
+- Con `PermiteProcesamientoParcial = false` y filas con error: deshabilitar acción **Procesar** / **Confirmar** y mostrar mensaje explícito (p. ej. «Existen filas con error; corrija el archivo antes de procesar»).
+- Con `PermiteProcesamientoParcial = true`: permitir confirmar procesando solo filas válidas; informar cantidad de filas omitidas por error.
+
+**Auditoría**
+
+- Registrar en el lote: `CantidadFilasConError`, `CantidadFilasProcesadas` y estado final (`procesada` vs `procesada_parcial`).
+
 ## 7. Normalizaciones configurables
+
+**Fila ajustada automáticamente** (`FilaAjustadaAutomaticamente` en staging): fila a la que el importador le aplicó **trim** de espacios (§7.1) o **eliminación de caracteres no imprimibles** (§7.2) porque los parámetros del lote/proceso lo indican. Es un **marcador de auditoría** («el sistema modificó el valor leído del Excel antes de validar»); **no** es un error ni bloquea el procesamiento por sí solo. La fila sigue siendo válida o con error según las validaciones de formato y negocio sobre el valor **ya normalizado**.
+
+**UI (esta etapa):** **no** se informa al usuario que una fila fue ajustada (sin columna, ícono ni mensaje en la grilla). El flag queda solo en staging para trazabilidad técnica.
+
 ### 7.1 Espacios en blanco
 Parámetro:
 - `MantenerEspaciosEnBlanco` = false por defecto
 
 Si está en false:
 - se aplica trim automático al inicio y fin
-- si hubo cambio, la fila queda marcada como ajustada
+- si hubo cambio, `FilaAjustadaAutomaticamente = true`
 
 Si está en true:
 - no se aplica trim
@@ -123,13 +163,14 @@ Parámetro:
 
 Si está en false:
 - se eliminan caracteres no imprimibles
-- si hubo cambio, la fila queda marcada como ajustada
+- si hubo cambio, `FilaAjustadaAutomaticamente = true`
 
 Si está en true:
 - se conserva el contenido original
 
 ## 8. Presentación de resultados
 - La visualización estándar es DevExtreme DataGrid.
+- **Fuera de UI (esta etapa):** indicar filas con normalización automática (`FilaAjustadaAutomaticamente`); ver §7.
 - Debe existir una columna fija de errores.
 - Los errores de una fila se muestran concatenados en una sola columna.
 - La fila con error debe marcarse con fondo suave.
@@ -160,3 +201,15 @@ El encabezado del Excel debe ser humano y claro, pero controlado:
 - sin tildes
 - sin símbolos
 - con coincidencia exacta respecto de la plantilla exportada
+
+## 12. Generación de plantilla modelo
+
+- Se realiza en base a la tabla "PQ_EXCEL_PROCESOS_CAMPOS"
+- la fila 1 (encabezado), destacarla con Fondo Azul y letras blancas
+- el atributo "ordenCampo" indica el orden de generación de las columnas 
+   (1->A, 2->B, ....)  , solo alterado si existe una columna con "Activo" = false 
+- Como título se coloca el "NombreColumnaExcel"
+- si el atributo "Observaciones" no está vacío, se carga como comentario de la celda
+- se formatea cada columna según el atributo "TipoDato"
+- Los atributos "LargoMaximo" y "CantidadDecimales" se utilizan como validación de celda
+- Definir si los datos booleanos se exigen 0 y 1, "N"/"S" , o "VERDADERO"/"FALSO", según conveniencia para el procesamiento posterior.

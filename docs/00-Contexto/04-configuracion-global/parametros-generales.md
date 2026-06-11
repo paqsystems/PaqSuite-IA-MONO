@@ -48,6 +48,32 @@ Los registros iniciales se cargan por seed. La pantalla no permite alta ni baja 
 
 ---
 
+## Tipos de dato (`tipo_valor`)
+
+**Fuente canónica (BASE):** [`docs/_base/pq-parametros-gral-tipo-valor.md`](../../../../_base/pq-parametros-gral-tipo-valor.md) — contrato común a **MONO**, **MULTI** y todos los módulos.
+
+Resumen (réplica inline para lectura rápida; ante divergencia prevalece BASE):
+
+| `tipo_valor` | Significado | Columna de valor |
+|:------------:|-------------|------------------|
+| **S** | String corto | `Valor_String` |
+| **T** | Texto largo | `Valor_Text` |
+| **I** | Entero | `Valor_Int` |
+| **D** | Fecha/hora | `Valor_DateTime` |
+| **B** | Booleano | `Valor_Bool` |
+| **N** | Decimal / numérico | `Valor_Decimal` |
+
+Reglas clave:
+
+- Solo **una** columna `Valor_*` es efectiva por fila, según `tipo_valor`.
+- En backend usar `ParametrosGralTipoValor::fromRow()` (tolerancia de casing SQL Server).
+- Código desconocido o vacío → fallback **`S`**.
+- En lectura de servicios que no exponen HU-007, respetar el mismo mapeo (incluye **`T`** y **`D`**, no solo S/I/B/N).
+
+Controles de edición por tipo: ver tabla en el documento BASE § Controles de UI (HU-007).
+
+---
+
 ## Interfaz de usuario
 
 ### Listado

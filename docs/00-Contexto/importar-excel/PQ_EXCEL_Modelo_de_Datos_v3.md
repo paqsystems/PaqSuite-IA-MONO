@@ -73,7 +73,24 @@ Las reglas ya cerradas producen estas simplificaciones de diseño:
 - mantiene orden técnico interno
 - permite evolucionar procesos sin exponer nombres técnicos
 
-## 8. Decisiones operativas que impactan el modelo
+## 8. Política de procesamiento ante filas con error
+
+En **`PQ_EXCEL_PROCESOS`**, el atributo **`PermiteProcesamientoParcial`** fija, **por proceso**, si la presencia de **al menos una fila con error** en el lote permite igualmente procesar las filas válidas restantes.
+
+| `PermiteProcesamientoParcial` | Efecto |
+|-------------------------------|--------|
+| `0` (default) | Procesamiento final **bloqueado** mientras exista ≥ 1 fila con `TieneError = 1` o estado de fila erróneo. |
+| `1` | Procesamiento final **permitido** sobre filas válidas; filas con error no se aplican al destino; lote puede quedar en `procesada_parcial`. |
+
+Esta regla es **independiente por proceso**: dos procesos distintos pueden adoptar políticas distintas según criticidad del dato o conveniencia operativa.
+
+Errores **estructurales** del archivo (previos al staging) no entran en esta política: el lote no alcanza estado `lista_para_procesar`.
+
+**Casos borde:** si **todas** las filas tienen error → no se habilita procesamiento (aunque `PermiteProcesamientoParcial = 1`). Si **cero** filas tienen error → se procesa todo el lote; estado `procesada` (no `procesada_parcial`).
+
+**Fila ajustada:** `FilaAjustadaAutomaticamente` por trim o limpieza de caracteres (ver documento conceptual §7); solo auditoría en BD, **sin indicación en UI** en esta etapa.
+
+## 9. Decisiones operativas que impactan el modelo
 - cada importación debe tener un identificador único
 - el staging debe ser persistente
 - el historial debe quedar disponible desde la primera etapa
@@ -81,7 +98,7 @@ Las reglas ya cerradas producen estas simplificaciones de diseño:
 - debe registrarse el estado de cada lote y de cada fila
 - debe registrarse la hoja elegida y el archivo original
 
-## 9. Nota de evolución futura
+## 10. Nota de evolución futura
 En etapas futuras podría analizarse:
 - múltiples hojas por proceso
 - archivos múltiples

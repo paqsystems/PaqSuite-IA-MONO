@@ -196,6 +196,7 @@ Proxy `/api` → `http://localhost:8000` para evitar CORS en local.
 | OpenAPI spec | `cd backend && composer openapi` | `storage/api-docs/api-docs.json` actualizado |
 | Frontend dev | `cd frontend && npm run dev` | `http://localhost:3000` |
 | Frontend tests | `cd frontend && npm run test:all` | unit + E2E smoke |
+| CI GitHub Actions | Copiar plantilla `docs/_base/templates/github/workflows/ci.yml` → `.github/workflows/ci.yml` | Ver [`docs/_base/00-github-actions-ci-scaffold.md`](../../_base/00-github-actions-ci-scaffold.md) |
 
 ---
 
@@ -207,7 +208,8 @@ Proxy `/api` → `http://localhost:8000` para evitar CORS en local.
 | Login / sesión | [`02-acceso-y-seguridad/login-y-sesion.md`](../02-acceso-y-seguridad/login-y-sesion.md) |
 | Normas TR | `docs/04-tareas/_NORMAS-TRANSVERSALES-TR.md` (producto) |
 | Manual programador | `docs/_base/_MANUAL-PROGRAMADOR.MD` §4 |
+| CI GitHub Actions | [`docs/_base/00-github-actions-ci-scaffold.md`](../../_base/00-github-actions-ci-scaffold.md) |
 
 ---
 
-*Última actualización: 2026-05-30 — L5-Swagger en scaffold backend.*
+*Última actualización: 2026-06-03 — CI GitHub Actions en scaffold.*

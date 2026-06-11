@@ -493,7 +493,9 @@ Las métricas deben incorporar propiedades adicionales.
     "permiteEliminar": true,
     "visibilidad": "global",
     "soloCreadorModifica": true,
-    "soloCreadorElimina": true
+    "soloCreadorElimina": true,
+    "restaurarUltimoDiseno": true,
+    "plantillaInicialPivotVacia": true
   }
 }
 ```
@@ -503,6 +505,27 @@ Las métricas deben incorporar propiedades adicionales.
 - solo el creador modifica mediante `Guardar`
 - cualquier usuario puede crear otro mediante `Guardar como`
 - solo el creador elimina
+- diseños propios (`isOwner`) muestran sufijo **` (*)`** en selector (i18n `pivotLayout.ownerMarker`); no se persiste en el nombre
+- **Plantilla inicial** (`configId: null`) restablece pivot vacía (sin campos en áreas); i18n `pivotLayout.initialTemplate`
+- con plantilla inicial activa, **Guardar** equivale a **Guardar como**
+- al montar la pantalla, restaurar último diseño usado por el usuario si `restaurarUltimoDiseno` es true
+- **`nombre` único por `consulta_id`** (paridad grilla); duplicado en Guardar como → `pivotLayout.duplicateName`
+
+---
+
+# 17.1 UI transversal del PivotGrid (paridad GEN-03)
+
+Toda consulta pivotable con persistencia habilitada debe cumplir:
+
+| # | Requisito | Referencia |
+|---|-----------|------------|
+| 1 | Sufijo ` (*)` en diseños propios | `pivotLayout.ownerMarker` |
+| 2 | Plantilla inicial → pivot vacía | `configId: null`, reset field panel |
+| 3 | Guardar desde plantilla inicial = Guardar como | POST con nombre |
+| 4 | Ícono Actualizar en toolbar | `pivot.refresh`, `data-testid="pivotRefresh"`, re-fetch servidor |
+| 5 | i18n completo DevExtreme | `patron-i18n-pivot-devextreme.md` |
+
+Documento de implementación: `frontend-pivotgrid-devextreme-agregaciones-y-menu.md` §6–8.
 
 ---
 
@@ -715,6 +738,7 @@ Toda definición técnica debe validar:
 6. La definición debe ser versionable y compatible con pivots guardados.
 7. Las restricciones deben validarse antes de ejecutar la consulta.
 8. El usuario nunca debe ver nombres técnicos en la UI.
+9. La UI del pivot debe alinear persistencia y toolbar con grillas: ` (*)` en propios, plantilla inicial → pivot vacía, Guardar = Guardar como, Actualizar e i18n DevExtreme.
 
 ---
 

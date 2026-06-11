@@ -120,6 +120,8 @@ Tabla:
 
 Almacena cada pivot guardado por usuarios.
 
+> Reglas funcionales detalladas (visibilidad global, Guardar / Guardar como, borrado lógico, JSON): [modelo_datos_pivots_personalizados.md](modelo_datos_pivots_personalizados.md). El boceto `PQ_PIVOTS` de ese documento mapea a esta tabla.
+
 ------------------------------------------------------------------------
 
 ## Estructura

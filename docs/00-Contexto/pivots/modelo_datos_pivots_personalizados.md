@@ -2,7 +2,22 @@
 **Proyecto:** Paqsuite  
 **Documento:** Diseño de persistencia de pivots guardados  
 **Versión:** 1.0  
-**Fecha:** 2026-03-16
+**Fecha:** 2026-03-16  
+**Última actualización:** 2026-06-11 — nota de nomenclatura canónica (alineación PaqSuite-IA-Tango)
+
+---
+
+## Nota de nomenclatura (implementación canónica)
+
+En **PaqSuite-IA-Tango** (referencia implementada) la persistencia física usa **`pq_pivots_config`** en Dictionary DB con prefijo `pq_pivots_`. Este documento conserva el boceto conceptual inicial (`dbo.PQ_PIVOTS`, PascalCase) y las **reglas funcionales** (§2, §7, §20); no reemplaza el DDL canónico.
+
+| Ámbito | Fuente |
+|--------|--------|
+| Migraciones, modelos, API CRUD de diseños | **`pq_pivots_config`** — [modelo_datos_pivots_y_catalogo.md](modelo_datos_pivots_y_catalogo.md) |
+| Reglas de negocio, JSON de configuración, borrado lógico | Este documento + [especificacion_tecnica §17](especificacion_tecnica_consultas_pivotables.md) |
+| Mapeo conceptual → físico | `PivotID` → `pivot_id`; `ConsultaID` → `consulta_id`; `ConfiguracionJson` → `configuracion_json`; `UsuarioCreadorID` → `user_id` / `usuario_creador_id` (FK según TR) |
+
+**TR e implementación:** citar `modelo_datos_pivots_y_catalogo.md` como fuente de verdad del esquema; este archivo como complemento normativo funcional (patrón TR-020 Informes en Tango, que referencia ambos documentos).
 
 ---
 
@@ -29,7 +44,11 @@ El almacenamiento de pivots debe respetar estas reglas:
 2. solo el creador puede modificar un pivot existente mediante **Guardar**
 3. cualquier usuario puede crear una nueva variante mediante **Guardar como**
 4. solo el creador puede eliminar su pivot
-5. la lógica funcional debe ser equivalente a la usada para grillas guardadas
+5. la lógica funcional debe ser equivalente a la usada para grillas guardadas (HU-GEN-03)
+6. los diseños propios (`isOwner: true`) se marcan en el selector con sufijo **` (*)`** (i18n `pivotLayout.ownerMarker`); no se almacena en el campo `Nombre`
+7. **Plantilla inicial** (`configId: null`) representa pivot vacía en UI; al seleccionarla se resetea el diseño sin filas/columnas/valores/filtros internos asignados
+8. con plantilla inicial activa, **Guardar** equivale a **Guardar como** (POST con nombre nuevo)
+9. debe registrarse último diseño usado por usuario (tabla auxiliar análoga a `pq_grid_layout_last_used`, p. ej. `pq_pivots_config_last_used`)
 
 ---
 
@@ -85,12 +104,12 @@ Permite guardar trazabilidad de cambios relevantes.
 
 ## 5.1 Nombre sugerido
 
+> **Implementación canónica (Dictionary DB):** tabla **`pq_pivots_config`** — ver [modelo_datos_pivots_y_catalogo.md](modelo_datos_pivots_y_catalogo.md).  
+> El identificador `dbo.PQ_PIVOTS` siguiente es el **boceto conceptual v1.0**; no usar en migraciones ni código.
+
 ```txt
 dbo.PQ_PIVOTS
 ```
-
-> Si preferís otra convención exacta dentro del Dictionary DB, puede ajustarse luego.  
-> A nivel conceptual, se asume prefijo `PQ_`.
 
 ---
 
@@ -174,19 +193,10 @@ IX_PQ_PIVOTS_PivotOrigenID
 
 # 9. Regla sobre nombres
 
-Conviene definir desde el inicio una regla.
+**Decisión A1 (SPEC-001-08, paridad grilla):** el `nombre` del diseño guardado es **único por `consulta_id`** (un solo registro activo por nombre en la consulta, independiente del creador).
 
-## Opción recomendada
-Permitir nombres repetidos globalmente, pero no necesariamente dentro de una misma consulta por el mismo creador.
-
-## Recomendación práctica
-Aplicar una validación lógica, no necesariamente una restricción física estricta, para evitar duplicados confusos.
-
-Ejemplo de validación sugerida:
-
-> Dentro de la misma consulta, no permitir dos pivots activos del mismo creador con el mismo nombre exacto.
-
-Esto deja libertad suficiente y evita confusión.
+- Intento de **Guardar como** con nombre duplicado → error i18n (`pivotLayout.duplicateName`); no sobrescribir diseño ajeno.
+- El sufijo ` (*)` es solo visual para diseños propios; no forma parte del `nombre` persistido.
 
 ---
 
@@ -300,7 +310,7 @@ Actualiza un pivot existente.
 ---
 
 ## 14.2 Guardar como
-Crea un nuevo pivot partiendo de otro existente o de una configuración no guardada.
+Crea un nuevo pivot partiendo de otro existente o de una configuración no guardada (incluye diseño sobre **plantilla inicial** / pivot vacía).
 
 ### Acciones
 - insertar nuevo registro
@@ -308,6 +318,9 @@ Crea un nuevo pivot partiendo de otro existente o de una configuración no guard
 - asignar nuevo creador
 - registrar `PivotOrigenID` si aplica
 - registrar fechas de creación y modificación inicial
+
+### Regla especial
+Si el usuario tiene activa la **plantilla inicial** (`configId: null`) y pulsa **Guardar**, el sistema debe ejecutar este flujo (Guardar como), no un PUT inexistente.
 
 ---
 
@@ -461,6 +474,9 @@ Más adelante podría agregarse:
 5. Solo el creador puede modificar o eliminar.
 6. Toda configuración debe guardar la versión de definición técnica de la consulta.
 7. El diseño debe ser análogo al criterio usado para grillas guardadas.
+8. Plantilla inicial (`configId: null`) = pivot vacía; Guardar en ese estado = Guardar como.
+9. Diseños propios se identifican con sufijo ` (*)` en selector (`pivotLayout.ownerMarker`).
+10. UI del pivot debe incluir Actualizar (re-fetch) e i18n completo DevExtreme (ver `patron-i18n-pivot-devextreme.md`).
 
 ---
 
