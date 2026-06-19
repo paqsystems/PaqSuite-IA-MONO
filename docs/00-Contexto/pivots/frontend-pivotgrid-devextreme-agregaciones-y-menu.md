@@ -3,7 +3,7 @@
 **Proyecto:** PaqSuite  
 **Ámbito:** frontend compartido (`PivotGridBlock`, convivencia con `DataGridDX`)  
 **Versión:** 1.1  
-**Fecha:** 2026-06-10  
+**Fecha:** 2026-06-18  
 
 ---
 
@@ -49,7 +49,20 @@ Dejar registro de **cómo** se implementó la vista pivot basada en **DevExtreme
 - Para que el mismo comportamiento aplique al **Field Chooser** integrado, la API del `PivotGrid` expone la configuración anidada **`fieldChooser`**. El componente hijo React **`<FieldChooser />`** no declara `onContextMenuPreparing` en sus tipos; por eso se usa **`fieldChooser={{ enabled, allowSearch, onContextMenuPreparing }}`** en las props del `PivotGrid` en lugar de duplicar el hijo con una prop no tipada.
 - **Resolución de índice:** en algunos eventos `e.field.index` puede no venir informado; se añadió **`resolvePivotDataFieldIndex`** buscando el campo en `dataSource.fields()` por `dataField` y `area === 'data'`.
 
-### 3.2 Tipos (`dataType`) y `onFieldsPrepared`
+### 3.2 Menú contextual de encabezados (filas y columnas)
+
+Implementación: `frontend/src/shared/pivot/utils/pivotHeaderContextMenu.ts` (`buildPivotHeaderContextMenuItems`).
+
+| Layout filas | Área | Ítems adicionales |
+|--------------|------|-------------------|
+| **`standard`** (PedidosWeb) | **Columna** | **Expandir todo** / **Contraer todo** sobre la dimensión del encabezado (`dataSource.expandAll` / `collapseAll` + `reload`) |
+| **`standard`** | **Fila** | **Misma paridad** que columnas (desde CC PQ #7, 2026-06-18) |
+| **`standard`** | Fila (dimensión con detalle) | **Incluir detalle** (`includePivotFieldInRowArea`) cuando aplica (`codCliente` → `razonSocial`, etc.) |
+| **`tree`** | Fila / columna | Expandir / contraer ítem + expandir/contraer todo |
+
+Claves i18n: `pivot.dx.expandAll`, `pivot.dx.collapseAll` (5 locales + overrides `dxPivotGrid-*`).
+
+### 3.3 Tipos (`dataType`) y `onFieldsPrepared`
 
 - Al construir el `PivotGridDataSource`, para campos en área **`data`** se asigna **`dataType`** (`number` | `date` | `string`) a partir del catálogo o de una muestra de filas (incluye heurística para **strings con aspecto numérico**).
 - Se usa **`onFieldsPrepared`** del `PivotGridDataSource` para **reconciliar** `dataType` cuando DevExtreme o el store autogeneran campos (`retrieveFields` por defecto `true`) y la inferencia inicial difiere, sin tocar el `summaryType` elegido por el usuario (evita pisar un “Contar” intencional solo por corregir tipo).

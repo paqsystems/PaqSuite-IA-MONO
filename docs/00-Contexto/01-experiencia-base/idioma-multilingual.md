@@ -84,6 +84,35 @@ No entra en esta obligación el dato de negocio en sí, como nombres de clientes
 
 ---
 
+## Consulta de parámetros (PedidosWeb)
+
+Pantalla **solo lectura** `/general/parametros` (`pw_consultaparametros`). Los textos de fila no deben mostrarse en español fijo cuando el locale activo es otro idioma.
+
+| Superficie | Clave i18n | Fallback |
+|------------|------------|----------|
+| Descripción (columna caption) | `parametros.pedidosWeb.{Clave}.caption` | `CAPTION` de API/BD |
+| Tooltip | `parametros.pedidosWeb.{Clave}.tooltip` | `TOOLTIP` de API/BD |
+| Booleanos (`tipoValor=B`) | `pedidos.carga.cabecera.si` / `no` | — |
+
+**Implementación (PedidosWeb, CC PQ #7, 2026-06-18):**
+
+- Utilidad `resolveParametroConsultaTexts.ts` (`mapParametroConsultaRow`) con `t(key, { defaultValue: fallback })`.
+- Traducciones por idioma en `frontend/src/locales/parametros/pedidosWeb.{en,it,fr,pt}.json` (114 claves × idioma); español usa el JSON base `es.json` vía seed/`CAPTION`.
+- Fusión al iniciar i18n en `frontend/src/features/i18n/i18n.ts`.
+- `ParametrosConsultaPage` / `ConsultaGridPage`: remapear filas al cambiar `i18n.language`.
+
+Regenerar traducciones desde seed (opcional): `node frontend/scripts/generate-parametros-pedidosWeb-i18n.mjs` + `merge-parametros-pedidosWeb-i18n.mjs`.
+
+Producto: [`consulta-parametros.md`](../../../02-producto/PedidosWeb/consulta-parametros.md) §5. Seed: [`PQ_PARAMETROS_GRAL/README.md`](../../../backend/seed/PQ_PARAMETROS_GRAL/README.md).
+
+---
+
+## Captions pivot por consulta
+
+Consultas con pivot usan `resolveConsultaColumnCaption` y claves `pivot.consulta.{consultaId}.{dataField}` en los 5 locales, con fallback a `nombreVisible` de metadata. Ver [`patron-i18n-pivot-devextreme.md`](../pivots/patron-i18n-pivot-devextreme.md).
+
+---
+
 ## Relación con otros temas
 
 - Shell: `shell-layout.md`

@@ -117,6 +117,7 @@ php artisan serve --port=8000
 - Middleware tenant (400 `tenant.invalid`) — parcialmente implementado en productos avanzados
 - Capas Services / Repositories por dominio
 - Seed seguridad (`TR-GEN-02-modelo-roles-permisos-seed`)
+- **Objetos BD epics opcionales** (pivots, importar Excel, layouts grilla): inventario y orden migrate/seed en [`docs/_base/00-runbook-actualizacion-version.md`](../../_base/00-runbook-actualizacion-version.md) §10 (anexo PedidosWeb)
 
 ---
 

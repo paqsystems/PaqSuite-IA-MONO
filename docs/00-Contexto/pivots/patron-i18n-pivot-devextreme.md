@@ -3,7 +3,7 @@
 | Campo | Valor |
 |-------|--------|
 | **Ámbito** | Proyectos MONO con `PivotGridBlock` / consultas pivotables (SPEC-001-08) |
-| **Última actualización** | 2026-06-10 |
+| **Última actualización** | 2026-06-18 |
 | **Paridad con grillas** | Mismo criterio que [patron-i18n-grilla-devextreme.md](../03-ui-transversal/patron-i18n-grilla-devextreme.md) (SPEC-001-03 / GEN-03) |
 
 Documento **normativo** para que captions, menús, tooltips y textos internos del **PivotGrid** DevExtreme respeten i18n en los **5 locales** (`es`, `en`, `pt`, `fr`, `it`).
@@ -78,10 +78,11 @@ loadMessages(esMessages);
 | 1 | Áreas del field panel (Filas, Columnas, Filtros, Valores) | Override `dxPivotGrid-*` y/o props `texts` del `FieldPanel` | `pivot.dx.fieldPanel.*` | No depender solo del bundle DX |
 | 2 | Field Chooser (título, vacío, búsqueda) | Props `fieldChooser` + overrides | `pivot.dx.fieldChooser.*` | |
 | 3 | Menú contextual de agregación (Sumar, Promedio…) | Ítems custom en `onContextMenuPreparing` | `pivot.summary.*` | Paridad con menú de totalizadores de grilla |
+| 3b | Menú encabezado fila/columna — Expandir/Contraer todo | `buildPivotHeaderContextMenuItems` | `pivot.dx.expandAll`, `pivot.dx.collapseAll` | Paridad fila ↔ columna en `rowHeaderLayout: standard` |
 | 4 | Toolbar — Guardar / Guardar como / Eliminar | `Button` DevExtreme + `t()` | `pivotLayout.save`, `pivotLayout.saveAs`, `pivotLayout.delete` | |
 | 5 | Toolbar — selector de diseños | `SelectBox` + sufijo propios | `pivotLayout.initialTemplate`, `pivotLayout.ownerMarker` | `ownerMarker` = ` (*)` |
 | 6 | Toolbar — ícono Actualizar | `Button` `icon="refresh"` | `pivot.refresh` | Tooltip obligatorio |
-| 7 | Captions de campos pivotables | Metadata `nombreVisible` + i18n de proceso si aplica | `pivot.field.*` o catálogo por consulta | Nunca `nombreTecnico` en UI |
+| 7 | Captions de campos pivotables | Metadata `nombreVisible` + i18n por consulta | `pivot.field.*` o `resolveConsultaColumnCaption` | Nunca `nombreTecnico` en UI; claves `pivot.consulta.{consultaId}.{dataField}` en 5 locales |
 | 8 | Vacío / carga / error del bloque | Props del wrapper | `pivot.empty`, `pivot.loading`, `pivot.error.load` | |
 | 9 | Remount al cambiar idioma | `key={\`${consultaId}-${locale}\`}` en `PivotGrid` | — | Fuerza re-render de textos internos DX |
 
@@ -106,6 +107,7 @@ Ejecutar con al menos **es** e **it**:
 - [ ] Field panel: nombres de áreas en idioma activo
 - [ ] Field Chooser: título, vacío y búsqueda traducidos
 - [ ] Menú contextual de agregación en área Valores
+- [ ] Menú encabezado **fila** y **columna**: Expandir todo / Contraer todo (`pivot.dx.*`)
 - [ ] Toolbar: Guardar, Guardar como, Eliminar, selector de diseños
 - [ ] Sufijo ` (*)` en diseños propios (`pivotLayout.ownerMarker`)
 - [ ] Opción **Plantilla inicial** (`pivotLayout.initialTemplate`) traducida

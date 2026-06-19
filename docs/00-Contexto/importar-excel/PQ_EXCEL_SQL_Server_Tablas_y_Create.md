@@ -338,7 +338,7 @@ GO
 ## 8. Observaciones de diseño
 
 - `PQ_EXCEL_PROCESOS` define la configuración fija por proceso, incluida **`PermiteProcesamientoParcial`** (§6.1 documento conceptual).
-- `PQ_EXCEL_PROCESOS_CAMPOS` define la estructura esperada de cada plantilla.
+- `PQ_EXCEL_PROCESOS_CAMPOS` define la estructura esperada de cada plantilla y alimenta la **generación de plantilla modelo** (documento conceptual **§12**: encabezados, comentarios `OBLIGATORIO`/`Observaciones`, formato por `TipoDato`).
 - `PQ_EXCEL_IMPORTACIONES` representa el lote o sesión de importación.
 - `PQ_EXCEL_IMPORTACIONES_FILAS` guarda el staging por fila.
 - `PQ_EXCEL_IMPORTACIONES_FILAS_ERRORES` permite auditoría detallada sin ensuciar la grilla.

@@ -98,7 +98,31 @@ Errores **estructurales** del archivo (previos al staging) no entran en esta pol
 - debe registrarse el estado de cada lote y de cada fila
 - debe registrarse la hoja elegida y el archivo original
 
-## 10. Nota de evolución futura
+## 10. Atributos de `PQ_EXCEL_PROCESOS_CAMPOS` usados en plantilla modelo
+
+La exportación de plantilla (documento conceptual §12) consume:
+
+| Atributo | Uso en plantilla |
+|----------|------------------|
+| `OrdenCampo` | Orden de columnas en fila 1 |
+| `NombreColumnaExcel` | Texto visible del encabezado |
+| `TipoDato` | Formato de columna y validación Excel |
+| `LargoMaximo` | Validación de longitud (`texto`, `codigo`) |
+| `CantidadDecimales` | Formato y validación `decimal` |
+| `EsColumnaObligatoriaEstructural` | Línea `OBLIGATORIO` en comentario del encabezado |
+| `Observaciones` | Texto adicional en comentario del encabezado |
+| `Activo` | Solo `Activo = 1` se exporta |
+
+En `PQ_EXCEL_PROCESOS`:
+
+| Atributo | Uso en plantilla |
+|----------|------------------|
+| `GeneraPlantilla` | Si `0`, no se muestra botón ni endpoint de descarga |
+| `FormatoBooleanoPlantilla` | Lista de validación para columnas `booleano` |
+| `CodigoProceso` | Nombre sugerido del archivo `.xlsx` |
+
+## 11. Nota de evolución futura
+
 En etapas futuras podría analizarse:
 - múltiples hojas por proceso
 - archivos múltiples

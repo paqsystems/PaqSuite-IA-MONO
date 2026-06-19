@@ -204,12 +204,80 @@ El encabezado del Excel debe ser humano y claro, pero controlado:
 
 ## 12. Generación de plantilla modelo
 
-- Se realiza en base a la tabla "PQ_EXCEL_PROCESOS_CAMPOS"
-- la fila 1 (encabezado), destacarla con Fondo Azul y letras blancas
-- el atributo "ordenCampo" indica el orden de generación de las columnas 
-   (1->A, 2->B, ....)  , solo alterado si existe una columna con "Activo" = false 
-- Como título se coloca el "NombreColumnaExcel"
-- si el atributo "Observaciones" no está vacío, se carga como comentario de la celda
-- se formatea cada columna según el atributo "TipoDato"
-- Los atributos "LargoMaximo" y "CantidadDecimales" se utilizan como validación de celda
-- Definir si los datos booleanos se exigen 0 y 1, "N"/"S" , o "VERDADERO"/"FALSO", según conveniencia para el procesamiento posterior.
+Toda pantalla de **proceso de importación** debe ofrecer de forma **permanente** la acción **Descargar plantilla modelo** (botón en la barra de herramientas del proceso), siempre que el proceso tenga `GeneraPlantilla = 1` en `PQ_EXCEL_PROCESOS` (**valor por defecto del catálogo: `1`**). Los procesos excepcionales con `GeneraPlantilla = 0` (solo validación, sin modelo descargable) no muestran el botón.
+
+La plantilla es la **referencia normativa** para la validación estructural en la carga: el encabezado del archivo importado debe coincidir **exactamente** con la fila 1 de la plantilla exportada.
+
+### 12.1 Fuente de datos
+
+- Tabla **`PQ_EXCEL_PROCESOS_CAMPOS`**, solo registros con `Activo = 1`.
+- Orden de columnas: atributo **`OrdenCampo`** (1 → columna A, 2 → B, etc.).
+- Título visible en fila 1: **`NombreColumnaExcel`** (sin modificar el texto por obligatoriedad ni observaciones).
+
+### 12.2 Presentación de la fila de encabezado (fila 1)
+
+| Aspecto | Regla |
+|---------|--------|
+| Fondo | Azul `#4472C4` |
+| Texto | Blanco, negrita |
+| Contenido celda | Solo `NombreColumnaExcel` (sin asteriscos ni sufijos en el título) |
+| Fila de datos | La plantilla exporta **solo fila 1** (encabezados); filas 2+ quedan vacías para que el usuario complete |
+
+### 12.3 Comentario en cada celda de encabezado
+
+Cada celda de encabezado lleva **comentario Excel** (nota al pasar el mouse), armado así:
+
+1. Si **`EsColumnaObligatoriaEstructural = 1`**: la primera línea del comentario es **`OBLIGATORIO`** (mayúsculas, sin punto final obligatorio).
+2. Si **`Observaciones`** no está vacío: se agrega en línea siguiente (o misma línea separada por espacio si solo hay observaciones sin flag obligatorio).
+3. Si el campo es obligatorio **y** tiene observaciones, el comentario queda en dos líneas, por ejemplo:
+
+```text
+OBLIGATORIO
+Debe venir como texto
+```
+
+4. Si no es obligatorio estructural y `Observaciones` está vacío: **sin comentario** en esa celda.
+
+> **Distinción:** `EsColumnaObligatoriaEstructural` implica que la **columna debe existir** en el Excel (error de archivo si falta). La obligatoriedad de **valor** en negocio se valida por fila en backend aunque la columna exista vacía (`NULL`).
+
+### 12.4 Formato de columna según `TipoDato`
+
+Se aplica formato de columna Excel (desde fila 2 en adelante, para cuando el usuario cargue datos) y validación de datos cuando Excel lo permita:
+
+| `TipoDato` | Formato Excel (columna) | Validación de celda (si aplica) |
+|------------|-------------------------|----------------------------------|
+| `texto` | Texto (`@`) | Longitud máxima `LargoMaximo` |
+| `codigo` | Texto (`@`) — forzar texto, no número | Longitud máxima `LargoMaximo` |
+| `entero` | Entero (`0`) | Entero; opcional tope según `LargoMaximo` |
+| `decimal` | Decimal con `CantidadDecimales` (p. ej. `0.00` si 2 decimales) | Decimal |
+| `fecha` | Fecha corta locale (p. ej. `dd/mm/yyyy`) | Fecha válida |
+| `booleano` | Según `FormatoBooleanoPlantilla` del proceso en `PQ_EXCEL_PROCESOS` | Lista desplegable con valores permitidos |
+
+**Booleano** — valores permitidos en lista de validación según `FormatoBooleanoPlantilla`:
+
+| Valor columna | Lista Excel |
+|---------------|-------------|
+| `0_1` (default) | `0`, `1` |
+| `N_S` | `N`, `S` |
+| `VERDADERO_FALSO` | `VERDADERO`, `FALSO` |
+
+### 12.5 Validaciones adicionales en plantilla
+
+- **`LargoMaximo`**: validación de longitud de texto en celdas de datos (filas ≥ 2).
+- **`CantidadDecimales`**: precisión en columnas `decimal`.
+- Los comentarios y formatos deben generarse con la misma librería que la exportación (backend: PhpSpreadsheet en implementación portal).
+
+### 12.6 Nombre del archivo sugerido
+
+`{CodigoProceso}_plantilla_{yyyyMMdd}.xlsx`
+
+### 12.7 Resumen de trazabilidad
+
+| Requisito usuario | Atributo / regla |
+|-------------------|------------------|
+| Botón siempre visible en importación | UI toolbar; `GeneraPlantilla = 1` (default) |
+| Todas las columnas requeridas | `PQ_EXCEL_PROCESOS_CAMPOS` activos por `OrdenCampo` |
+| Título de cada columna | `NombreColumnaExcel` en fila 1 |
+| Comentario con observaciones | `Observaciones` en comentario de celda encabezado |
+| Indicar OBLIGATORIO | `EsColumnaObligatoriaEstructural = 1` → línea `OBLIGATORIO` en comentario |
+| Formato por tipo de dato | `TipoDato` + `CantidadDecimales` / `FormatoBooleanoPlantilla` |
