@@ -45,6 +45,7 @@ Ofrecer una vista rápida y autosuficiente del modelo de seguridad para que, al 
 - Seguridad y permisos: `seguridad-permisos.md`
 - Menú y autorización: `menu-y-autorizacion.md`
 - Administración de seguridad: `administracion-seguridad.md`
+- Mantenimiento de roles y permisos (individual y masivo): `mantenimiento-roles-permisos.md`
 
 ## Derivaciones esperables
 

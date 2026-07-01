@@ -51,6 +51,7 @@ En MONO no interviene una empresa seleccionada por el usuario en tiempo real. La
 - Seguridad y permisos: `seguridad-permisos.md`
 - Login y sesión: `login-y-sesion.md`
 - Administración de seguridad: `administracion-seguridad.md`
+- Mantenimiento de roles y permisos: `mantenimiento-roles-permisos.md`
 
 ## Derivaciones esperables
 

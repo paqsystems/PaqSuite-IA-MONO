@@ -83,10 +83,13 @@ Esto implica, por ejemplo:
 
 ## Acceso a pantallas de administración
 
-Los ABM de usuarios, roles, permisos y atributos requieren rol de administrador del sistema o permisos equivalentes. Ver `administracion-seguridad.md`.
+Los ABM de roles, permisos y atributos requieren rol con `AccesoTotal` o permisos equivalentes sobre la opción de menú del proceso. Ver `administracion-seguridad.md` y los flujos detallados en `mantenimiento-roles-permisos.md`.
+
+En **PedidosWeb** no hay ABM de usuarios en portal; las identidades provienen del ERP.
 
 ## Relación con otros temas
 
+- Mantenimiento de roles y permisos: `mantenimiento-roles-permisos.md`
 - Login y sesión: `login-y-sesion.md`
 - Menú y autorización: `menu-y-autorizacion.md`
 - Menú general: `../01-experiencia-base/menu-general.md`

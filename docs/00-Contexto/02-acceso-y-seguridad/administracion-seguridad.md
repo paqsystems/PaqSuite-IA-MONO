@@ -10,6 +10,8 @@ Solo usuarios con perfil administrador, o con permisos explícitos sobre las opc
 
 Gestión de la tabla `users`.
 
+> **PedidosWeb:** este ABM **no aplica** en el producto; los usuarios se proveen desde el ERP. En permisos solo se usan como catálogo de lookup. Ver `mantenimiento-roles-permisos.md` §3.
+
 ### Capacidades
 
 - Listar con filtros por código, nombre, email y estado.
@@ -45,10 +47,16 @@ Gestión de `Pq_Rol`.
 Gestión de `Pq_Permiso`, es decir, de la asignación de acceso.
 
 - Alta y edición de combinaciones usuario y rol.
+- **Asignación individual** (un usuario, un rol) y **asignación masiva** (por usuario con varios roles, o por rol con varios usuarios). Detalle de flujos, validaciones y API en `mantenimiento-roles-permisos.md`.
 - En MONO la empresa del despliegue es fija y puede no mostrarse en la UI.
 - Eliminar una asignación equivale a quitar acceso al usuario.
 - La combinación gestionada en MONO es funcionalmente `usuario + rol` sobre la instalación actual.
 - Si por compatibilidad de esquema legado existiera una columna como `IDEmpresa`, en MONO no forma parte de la regla de negocio visible y puede mantenerse solo con un valor fijo de instalación hasta normalizar el modelo físico.
+
+### PedidosWeb
+
+- Los usuarios no se dan de alta desde este módulo; provienen del ERP / sincronización. El ABM de permisos solo **asigna roles** a usuarios ya existentes.
+- No existe modo masivo «por empresa» (referencia Tango TR-013 update 03); en MONO aplican solo los modos **por usuario** y **por rol**.
 
 ---
 
@@ -83,6 +91,8 @@ Las opciones de administración deben existir en `pq_menus` con `routeName` y `e
 
 ## Relación con otros temas
 
+- SPEC ([A1 cerrada](../../../05-open-spec/001-Generaliddes/SPEC-001-02-admin-mantenimiento-roles-permisos.md)): `SPEC-001-02-admin-mantenimiento-roles-permisos.md`
+- Mantenimiento de roles y permisos (flujos detallados): `mantenimiento-roles-permisos.md`
 - Seguridad y permisos: `seguridad-permisos.md`
 - Menú y autorización: `menu-y-autorizacion.md`
 - Grillas ABM: `../03-ui-transversal/grillas.md`
